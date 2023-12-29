@@ -1,5 +1,8 @@
 from typing import Optional
-from fastapi import FastAPI, APIRouter, status
+from fastapi import FastAPI, APIRouter, status, Query
+
+from schemas import Recipe, RecipeSearchResults, RecipeCreate
+
 app = FastAPI(title="Recipe API", openapi_url="/openapi.json")
 
 api_router = APIRouter()
@@ -32,7 +35,7 @@ def root() -> dict:
     """
     return {"message": "Hello World"}
 
-@api_router.get("/recipe/{recipe_id}", status_code=status.HTTP_200_OK)
+@api_router.get("/recipe/{recipe_id}", status_code=status.HTTP_200_OK, response_model=Recipe)
 def fetch_recipe(*, recipe_id: int) -> dict:
     """
     Fetch a recipe by ID
@@ -41,8 +44,8 @@ def fetch_recipe(*, recipe_id: int) -> dict:
     if result:
         return result[0]
 
-@api_router.get("/search/", status_code=status.HTTP_200_OK)
-def search_recipes(keyword: Optional[str]=None, max_results: Optional[int]=10) -> dict:
+@api_router.get("/search/", status_code=status.HTTP_200_OK, response_model=RecipeSearchResults)
+def search_recipes(keyword: Optional[str]=Query("Tofu", min_length=3, example="chicken"), max_results: Optional[int]=10) -> dict:
     """
     Search for recipes by label keyword
     """
@@ -53,6 +56,21 @@ def search_recipes(keyword: Optional[str]=None, max_results: Optional[int]=10) -
     results = filter(lambda recipe: keyword.lower() in recipe["label"].lower(), RECIPES)
     # filter returns an iterator, so we need to convert it to a list
     return {"results": list(results)[:max_results]}
+
+@api_router.post("/recipe/", status_code=status.HTTP_201_CREATED, response_model=Recipe)
+def create_recipe(*, recipe: RecipeCreate) -> dict:
+    """
+    Create a new recipe
+    """
+    new_entry_id = len(RECIPES) + 1
+    recipe_entry = Recipe(
+        id=new_entry_id,
+        label=recipe.label,
+        source=recipe.source,
+        url=recipe.url,
+    )
+    RECIPES.append(recipe_entry.model_dump())
+    return recipe_entry
 
 app.include_router(api_router)
 
