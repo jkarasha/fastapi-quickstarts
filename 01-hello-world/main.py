@@ -1,16 +1,16 @@
-from typing import Union
-from fastapi import FastAPI, responses, status
+from fastapi import FastAPI, APIRouter, status
+app = FastAPI(title="Recipe API", openapi_url="/openapi.json")
 
-app = FastAPI()
+api_router = APIRouter()
+app.include_router(api_router)
 
-@app.get("/hello/{name}", status_code=status.HTTP_200_OK, tags=["greetings"])
-async def greeting(name: str = "World") -> Union[str, dict]:
-    if name.lower() == "bob":
-        return responses.JSONResponse(
-            content={"error": "Bob is not allowed"},
-            status_code=status.HTTP_400_BAD_REQUEST,
-        )
-    else:
-        return responses.JSONResponse(
-            content={"greeting": f"Hello, {name.title()}"},
-            status_code=status.HTTP_200_OK,)
+@api_router.get("/", status_code=status.HTTP_200_OK)
+def root() -> dict:
+    """
+    Root GET
+    """
+    return {"message": "Hello World"}
+
+if __name__ == "__main__":
+    import uvicorn
+    uvicorn.run(app, log_level="debug")
