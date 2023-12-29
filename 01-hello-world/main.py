@@ -1,39 +1,28 @@
-from typing import Optional, Any
-from fastapi import FastAPI, APIRouter, status, Query, HTTPException
+from typing import Optional, Any, Any
+from fastapi import FastAPI, APIRouter, status, Query, HTTPException, Request
+from fastapi.templating import Jinja2Templates
+from pathlib import Path
 
 from schemas import Recipe, RecipeSearchResults, RecipeCreate
+
+from recipe_data import RECIPES
+
+BASE_PATH = Path(__file__).resolve().parent
+TEMPLATES = Jinja2Templates(directory=str(BASE_PATH / "templates"))
 
 app = FastAPI(title="Recipe API", openapi_url="/openapi.json")
 
 api_router = APIRouter()
 
-RECIPES = [
-    {
-        "id": 1,
-        "label": "Chicken Vesuvio",
-        "source": "Serious Eats",
-        "url": "http://www.seriouseats.com/recipes/2011/12/chicken-vesuvio-recipe.html",
-    },
-    {
-        "id": 2,
-        "label": "Chicken Paprikash",
-        "source": "No Recipes",
-        "url": "http://norecipes.com/recipe/chicken-paprikash/",
-    },
-    {
-        "id": 3,
-        "label": "Cauliflower and Tofu Curry Recipe",
-        "source": "Serious Eats",
-        "url": "http://www.seriouseats.com/recipes/2011/02/cauliflower-and-tofu-curry-recipe.html",
-    },
-]
-
 @api_router.get("/", status_code=status.HTTP_200_OK)
-def root() -> dict:
+def root(request: Request) -> dict:
     """
     Root GET
     """
-    return {"message": "Hello World"}
+    return TEMPLATES.TemplateResponse(
+        "index.html",
+         {"request": request, "recipes": RECIPES}
+    )
 
 @api_router.get("/recipe/{recipe_id}", status_code=status.HTTP_200_OK, response_model=Recipe)
 def fetch_recipe(*, recipe_id: int) -> Any:
