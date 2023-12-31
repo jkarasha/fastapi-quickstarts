@@ -4,7 +4,7 @@ from fastapi.templating import Jinja2Templates
 from pathlib import Path
 
 from sqlalchemy.orm import Session
-from schemas import Recipe, RecipeSearchResults, RecipeCreate
+from schemas.recipe import Recipe, RecipeSearchResults, RecipeCreate
 
 from recipe_data import RECIPES
 import deps
