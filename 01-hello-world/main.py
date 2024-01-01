@@ -32,13 +32,13 @@ def fetch_recipe(*, recipe_id: int, db: Session = Depends(deps.get_db)) -> Any:
     """
     Fetch a recipe by ID
     """
-    result = [recipe for recipe in RECIPES if recipe["id"] == recipe_id]
+    result = crud.recipe.get(db=db, id=recipe_id)
     if not result:
         raise HTTPException(
             status_code=status.HTTP_404_NOT_FOUND,
             detail=f"Recipe with ID {recipe_id} not found"
         )
-    return result[0]
+    return result
 
 @api_router.get("/search/", status_code=status.HTTP_200_OK, response_model=RecipeSearchResults)
 def search_recipes(
@@ -48,28 +48,22 @@ def search_recipes(
     """
     Search for recipes by label keyword
     """
+    recipes = crud.recipe.get_multi(db=db, limit=max_results)
     if not keyword:
-        return {"results": RECIPES[:max_results]}
+        return {"results": recipes}
     #
     # lambda function to match recipes by keyword, use lambda function to filter recipes by keyword
-    results = filter(lambda recipe: keyword.lower() in recipe["label"].lower(), RECIPES)
+    results = filter(lambda recipe: keyword.lower() in recipe.label.lower(), recipes)
     # filter returns an iterator, so we need to convert it to a list
     return {"results": list(results)[:max_results]}
 
 @api_router.post("/recipe/", status_code=status.HTTP_201_CREATED, response_model=Recipe)
-def create_recipe(*, recipe: RecipeCreate, db: Session = Depends(deps.get_db),) -> dict:
+def create_recipe(*, recipe_in: RecipeCreate, db: Session = Depends(deps.get_db),) -> dict:
     """
     Create a new recipe
     """
-    new_entry_id = len(RECIPES) + 1
-    recipe_entry = Recipe(
-        id=new_entry_id,
-        label=recipe.label,
-        source=recipe.source,
-        url=recipe.url,
-    )
-    RECIPES.append(recipe_entry.model_dump())
-    return recipe_entry
+    recipe = crud.recipe.create(db=db, obj_in=recipe_in)
+    return recipe
 
 app.include_router(api_router)
 

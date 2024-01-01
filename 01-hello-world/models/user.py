@@ -10,7 +10,7 @@ class User(Base):
     email = Column(String, index=True, nullable=False)
     is_superuser = Column(Boolean, default=False)
     recipes = relationship(
-        "Recipes",
+        "Recipe",
         cascade="all, delete-orphan",
         back_populates="submitter",
         uselist=True,
