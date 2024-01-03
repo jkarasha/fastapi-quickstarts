@@ -1,3 +1,4 @@
+import time
 from fastapi import FastAPI, APIRouter, status, Request, Depends
 from fastapi.templating import Jinja2Templates
 from pathlib import Path
@@ -28,8 +29,16 @@ def root(request: Request, db: Session = Depends(deps.get_db)) -> dict:
          {"request": request, "recipes": recipes}
     )
 
-app.include_router(root_router, prefix=settings.API_V1_STR)
-app.include_router(api_router)
+@app.middleware("http")
+async def add_process_time_header(request: Request, call_next):
+    start_time = time.time()
+    response = await call_next(request)
+    process_time = time.time() - start_time
+    response.headers["X-Process-Time"] = str(process_time)
+    return response
+
+app.include_router(api_router, prefix=settings.API_V1_STR)
+app.include_router(root_router)
 
 if __name__ == "__main__":
     import uvicorn
