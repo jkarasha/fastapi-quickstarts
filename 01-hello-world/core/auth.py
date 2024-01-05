@@ -16,11 +16,37 @@ JWTPayloadMapping = MutableMapping[
 
 oauth2_scheme = OAuth2PasswordBearer(tokenUrl=f"{settings.API_V1_STR}/auth/login")
 
-def authenticate():
-    pass
+def authenticate(
+        *,
+        email: str,
+        password: str,
+        db: Session
+) -> Optional[User]:
+    user = db.query(User).filter(User.email == email).first()
+    if not user:
+        return None
+    if not verify_password(password, user.hashed_password):
+        return None
+    return user
 
-def create_access_token():
-    pass
+def create_access_token(*, sub: str) -> str:
+    return _create_token(
+        token_type="access_token",
+        lifetime=timedelta(minutes=settings.ACCESS_TOKEN_EXPIRE_MINUTES),
+        sub=sub
+    )
 
-def _create_token():
-    pass
+def _create_token(
+        token_type: str,
+        lifetime: timedelta,
+        sub: str
+) -> str:
+    payload = {}
+    expire = datetime.utcnow() + lifetime
+    #
+    payload["type"] = token_type
+    payload["exp"] = expire
+    payload["iat"] = datetime.utcnow
+    payload["sub"] = str(sub)
+    #
+    return jwt.encode(payload, settings.SECRET_KEY, algorithm=settings.ALGORITHM)
