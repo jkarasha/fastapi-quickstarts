@@ -41,3 +41,7 @@ class RecipeInDB(RecipeInDBBase):
 
 class RecipeSearchResults(BaseModel):
     results: Sequence[Recipe]
+
+class RecipeUpdateRestricted(BaseModel):
+    id: int
+    label: str

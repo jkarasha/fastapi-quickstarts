@@ -6,7 +6,14 @@ from typing import Any, Optional
 
 import crud
 from api import deps
-from schemas.recipe import Recipe, RecipeCreate, RecipeSearchResults
+from clients.reddit import RedditClient
+from schemas.recipe import (
+    Recipe,
+    RecipeCreate,
+    RecipeSearchResults,
+    RecipeUpdateRestricted
+)
+from models.user import User
 
 router = APIRouter()
 RECIPE_SUBREDDITS = ["recipes", "easyrecipes", "topsecretrecipes"]
@@ -42,7 +49,12 @@ def search_recipes(
     return {"results": list(results)[:max_results]}
 
 @router.post("/", status_code=status.HTTP_201_CREATED, response_model=Recipe)
-def create_recipe(*, recipe_in: RecipeCreate, db: Session = Depends(deps.get_db),) -> dict:
+def create_recipe(
+            *, 
+            recipe_in: RecipeCreate,
+            db: Session = Depends(deps.get_db),
+            current_user: User = Depends(deps.get_current_user)
+    ) -> dict:
     """
     Create a new recipe
     """
@@ -82,7 +94,9 @@ def get_reddit_top(subreddit: str) -> list:
     return subreddit_data
 
 @router.get("/ideas/async")
-async def fetch_ideas_async() -> dict:
+async def fetch_ideas_async(
+    user: User = Depends(deps.get_current_active_superuser)
+    ) -> dict:
     results = await asyncio.gather(
         *[get_reddit_top_async(subreddit=subreddit) for subreddit in RECIPE_SUBREDDITS]
     )
@@ -90,5 +104,5 @@ async def fetch_ideas_async() -> dict:
     return dict(zip(RECIPE_SUBREDDITS, results))
 
 @router.get("/ideas/")
-def fetch_ideas() -> dict:
-    return {key: get_reddit_top(subreddit=key) for key in RECIPE_SUBREDDITS}
+def fetch_ideas(reddit_client: RedditClient = Depends(deps.get_reddit_client)) -> dict:
+    return {key: reddit_client.get_reddit_top(subreddit=key) for key in RECIPE_SUBREDDITS}

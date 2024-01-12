@@ -9,6 +9,8 @@ from core.auth import oauth2_scheme
 from core.config import settings
 from db.session import SessionLocal
 from models.user import User
+from clients.reddit import RedditClient
+import crud
 
 class TokenData(BaseModel):
     username: Optional[str] = None
@@ -21,6 +23,10 @@ def get_db() -> Generator:
         yield db
     finally:
         db.close()
+
+
+def get_reddit_client() -> RedditClient:
+    return RedditClient()
 
 
 async def get_current_user(
@@ -54,3 +60,14 @@ async def get_current_user(
     #
     return user
 
+
+def get_current_active_superuser(
+        current_user: User = Depends(get_current_user)
+    ) -> User:
+    if not crud.user.is_superuser(current_user):
+        raise HTTPException(
+            status_code=status.HTTP_403_FORBIDDEN,
+            detail="The user doesn't have enough privileges"
+        )
+    #
+    return current_user
