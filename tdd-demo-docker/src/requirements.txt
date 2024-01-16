@@ -1,6 +1,10 @@
-fastapi==0.88.0
-uvicorn==0.20.0
+asyncpg
+databases[postgresql]
+fastapi
+psycopg2-binary
+SQLAlchemy
+uvicorn
 
 # dev
-pytest==7.2.0
-httpx==0.23.1
+pytest
+httpx
