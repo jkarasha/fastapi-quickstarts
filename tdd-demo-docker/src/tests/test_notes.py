@@ -33,7 +33,6 @@ def test_read_note(test_app, monkeypatch):
     assert response.status_code == status.HTTP_200_OK
     assert response.json() == test_data
 
-
 def test_read_note_incorrect_id(test_app, monkeypatch):
     async def mock_get(id):
         return None
@@ -43,6 +42,9 @@ def test_read_note_incorrect_id(test_app, monkeypatch):
     response = test_app.get("/notes/999")
     assert response.status_code == status.HTTP_404_NOT_FOUND
     assert response.json()["detail"] == "Note not found"
+    #
+    response = test_app.get("/notes/0")
+    assert response.status_code == status.HTTP_422_UNPROCESSABLE_ENTITY
 
 def test_read_all_notes(test_app, monkeypatch):
     test_data = [
@@ -120,4 +122,3 @@ def test_remove_note_incorrect_id(test_app, monkeypatch):
     response = test_app.delete("/notes/999/")
     assert response.status_code == status.HTTP_404_NOT_FOUND
     assert response.json()["detail"] == "Note not found"
-    
