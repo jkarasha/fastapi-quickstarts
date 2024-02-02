@@ -1,4 +1,10 @@
 fastapi
 uvicorn
+# Testing/Development
 httpx
 pytest
+# Database
+asyncpg
+databases[postgresql]
+psycopg2-binary
+SQLAlchemy
