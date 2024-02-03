@@ -26,3 +26,26 @@ async def read_org(id: int):
     if not org:
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Org with given id not found")
     return org
+
+@org_router.get("/", response_model=list[OrgDB])
+async def read_all_orgs():
+    return await crud.get_all()
+
+@org_router.put("/update/{id}", response_model=OrgDB)
+async def update_org(id: int, payload: OrgSchema):
+    org = await crud.get(id)
+    if not org:
+        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Org with given id not found")
+    org_id = await crud.put(id, payload)
+
+    response_object = {
+        "id": org_id,
+        "name": payload.name,
+        "description": payload.description,
+        "street": payload.street,
+        "city": payload.city,
+        "state": payload.state,
+        "zip": payload.zip
+    }
+
+    return response_object

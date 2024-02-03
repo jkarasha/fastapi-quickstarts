@@ -18,4 +18,4 @@ metadata.create_all(engine)
 def index():
     return {"message": "Hello World!"} 
 
-app.include_router(org.org_router, prefix="/org", tags=["org"])
+app.include_router(org.org_router, prefix="/orgs", tags=["org"])
