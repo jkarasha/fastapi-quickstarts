@@ -1,6 +1,7 @@
 from pydantic import BaseModel
 
 class OrgSchema(BaseModel):
+    name: str
     description: str
     street: str
     city: str

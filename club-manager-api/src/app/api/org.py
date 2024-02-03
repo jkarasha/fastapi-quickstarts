@@ -10,6 +10,7 @@ async def create_org(payload: OrgSchema):
 
     response_object = {
         "id": org_id,
+        "name": payload.name,
         "description": payload.description,
         "street": payload.street,
         "city": payload.city,
