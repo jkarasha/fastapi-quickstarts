@@ -20,16 +20,11 @@ org = Table(
     "organization",
     metadata,
     Column("id", Integer, primary_key=True),
-    Column("org_name", String(100)),
-    Column("org_description", String(255)),
-    Column("org_email", String(100)),
-    Column("org_phone", String(15)),
-    Column("org_website", String(100)),
-    Column("org_street", String(100)),
-    Column("org_city", String(50)),
-    Column("org_state", String(50)),
-    Column("org_zip", String(10)),
-    Column("created_date", DateTime, default=func.now(), nullable=False),
+    Column("description", String(255)),
+    Column("street", String(100)),
+    Column("city", String(50)),
+    Column("state", String(50)),
+    Column("zip", String(10))
 )
 
 database = Database(DATABASE_URL)

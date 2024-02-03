@@ -2,7 +2,7 @@ from fastapi import FastAPI
 
 from app.api import notes, ping
 from app.db import engine, database, metadata
-
+    
 metadata.create_all(engine)
 
 app = FastAPI()
