@@ -6,4 +6,6 @@ async def post(payload: OrgSchema):
                                  city=payload.city, state=payload.state, zip=payload.zip)
     return await database.execute(query=query)
 
-
+async def get(id: int):
+    query = org.select().where(id == org.c.id)
+    return await database.fetch_one(query=query)

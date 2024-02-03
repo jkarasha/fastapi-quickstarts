@@ -16,3 +16,12 @@ def test_create_org(test_app, monkeypatch):
     assert response.status_code == status.HTTP_201_CREATED
     assert response.json() == test_response_payload
 
+def test_read_org(test_app, monkeypatch):
+    test_data = {"id": 1, "name": "Nokea", "description": "Northwest Kenyans Association", "street": "1234 NW 5th Ave, Portland, OR 97209", "city": "Portland", "state": "OR", "zip": "97209"}
+    async def mock_get(id):
+        return test_data
+    monkeypatch.setattr(crud, "get", mock_get)
+    response = test_app.get("/org/get/1")
+    assert response.status_code == status.HTTP_200_OK
+    assert response.json() == test_data
+

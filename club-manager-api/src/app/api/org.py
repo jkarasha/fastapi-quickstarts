@@ -1,4 +1,4 @@
-from fastapi import APIRouter, status
+from fastapi import APIRouter, HTTPException, status
 from app.api import crud
 from app.api.models import OrgSchema, OrgDB
 
@@ -19,3 +19,10 @@ async def create_org(payload: OrgSchema):
     }
 
     return response_object
+
+@org_router.get("/get/{id}", response_model=OrgDB)
+async def read_org(id: int):
+    org = await crud.get(id)
+    if not org:
+        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Org with given id not found")
+    return org
