@@ -18,3 +18,7 @@ async def put(id: int, payload: OrgSchema):
     query = org.update().where(id == org.c.id).values(name=payload.name, description=payload.description, 
                                                       street=payload.street, city=payload.city, state=payload.state, zip=payload.zip)
     return await database.execute(query=query)
+
+async def delete(id: int): 
+    query = org.delete().where(id == org.c.id)
+    return await database.execute(query=query)
