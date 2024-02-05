@@ -4,7 +4,7 @@ from app.api.models import OrgSchema, OrgDB
 
 org_router = APIRouter()
 
-@org_router.post("/create", response_model=OrgDB, status_code=status.HTTP_201_CREATED)
+@org_router.post("/", response_model=OrgDB, status_code=status.HTTP_201_CREATED)
 async def create_org(payload: OrgSchema):
     org_id = await crud.post(payload)
 
@@ -20,7 +20,7 @@ async def create_org(payload: OrgSchema):
 
     return response_object
 
-@org_router.get("/get/{id}", response_model=OrgDB)
+@org_router.get("/{id}", response_model=OrgDB)
 async def read_org(id: int):
     org = await crud.get(id)
     if not org:
@@ -31,7 +31,7 @@ async def read_org(id: int):
 async def read_all_orgs():
     return await crud.get_all()
 
-@org_router.put("/update/{id}", response_model=OrgDB)
+@org_router.put("/{id}", response_model=OrgDB)
 async def update_org(id: int, payload: OrgSchema):
     org = await crud.get(id)
     if not org:
@@ -49,3 +49,11 @@ async def update_org(id: int, payload: OrgSchema):
     }
 
     return response_object
+
+@org_router.delete("/{id}", response_model=OrgDB)
+async def delete_org(id: int):
+    org = await crud.get(id)
+    if not org:
+        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Org with given id not found")
+    await crud.delete(id)
+    return org
