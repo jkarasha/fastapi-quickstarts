@@ -1,7 +1,7 @@
 import json
 from fastapi import status
 
-from app.api import crud
+from app.api import crud.orgs as org_crud
 
 def test_create_org(test_app, monkeypatch):
     test_request_payload = {"name": "Nokea", "description": "Northwest Kenyans Association", "street": "1234 NW 5th Ave, Portland, OR 97209", "city": "Portland", "state": "OR", "zip": "97209"}
@@ -10,7 +10,7 @@ def test_create_org(test_app, monkeypatch):
     async def mock_post(payload):
         return 1
     #
-    monkeypatch.setattr(crud, "post", mock_post)
+    monkeypatch.setattr(org_crud, "post", mock_post)
     response = test_app.post("/orgs/", data=json.dumps(test_request_payload))
     #
     assert response.status_code == status.HTTP_201_CREATED
@@ -46,7 +46,6 @@ def test_read_all_orgs(test_app, monkeypatch):
     response = test_app.get("/orgs/")
     assert response.status_code == status.HTTP_200_OK
     assert response.json() == test_data
-
 
 def test_update_org(test_app, monkeypatch):
     test_update_data = {"id": 1, "name": "Nokea", "description": "Northwest Kenyans Association", "street": "102 Main St.", "city": "Spokane", "state": "WA", "zip": "99206"}

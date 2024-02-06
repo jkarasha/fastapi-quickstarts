@@ -28,4 +28,13 @@ org = Table(
     Column("zip", String(10))
 )
 
+user = Table(
+    "user",
+    metadata,
+    Column("id", Integer, primary_key=True),
+    Column("username", String(50), unique=True, index=True),
+    Column("email", String(50), unique=True, index=True),
+    Column("password", String(50))
+)
+
 database = Database(DATABASE_URL)
