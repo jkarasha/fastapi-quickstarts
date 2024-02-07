@@ -1,6 +1,6 @@
 from fastapi import FastAPI
 from contextlib import asynccontextmanager
-from app.api import org
+from app.api import org, users
 from app.db import database, metadata, engine
 
 
@@ -19,3 +19,4 @@ def index():
     return {"message": "Hello World!"} 
 
 app.include_router(org.org_router, prefix="/orgs", tags=["org"])
+app.include_router(users.user_router, prefix="/users", tags=["users"])
