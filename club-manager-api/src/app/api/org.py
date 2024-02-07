@@ -1,5 +1,5 @@
 from fastapi import APIRouter, HTTPException, status
-from app.api import crud
+from app.api.crud import orgs as crud
 from app.api.models.orgs import OrgSchema, OrgDB
 
 org_router = APIRouter()
