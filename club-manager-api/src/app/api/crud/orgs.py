@@ -1,5 +1,5 @@
-from app.db import org, database
-from app.api.models.orgs import OrgSchema
+from app.db.models import Organization as org, database
+from app.api.schemas.orgs import OrgSchema
 
 async def post(payload: OrgSchema):
     query = org.insert().values(name=payload.name, description=payload.description, street=payload.street, 

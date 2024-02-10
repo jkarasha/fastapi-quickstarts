@@ -1,6 +1,6 @@
 from fastapi import APIRouter, HTTPException, status
 from app.api.crud import users as crud
-from app.api.models.users import UserSchema, UserDB
+from app.api.schemas.users import UserSchema, UserDB
 
 user_router = APIRouter()
 
