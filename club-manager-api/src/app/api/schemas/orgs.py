@@ -1,14 +1,15 @@
 import uuid
 
-from pydantic import BaseModel
+from pydantic import BaseModel, ConfigDict
 
-class OrgSchema(BaseModel):
+class Organization(BaseModel):
+
+    model_config = ConfigDict(from_attributes=True)
+    
+    pk: uuid.UUID
     name: str
     description: str
     street: str
     city: str
     state: str
     zip: str
-
-class OrgDB(OrgSchema):
-    id: uuid.UUID
