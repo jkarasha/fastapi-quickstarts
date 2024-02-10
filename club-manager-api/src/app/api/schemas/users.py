@@ -1,3 +1,4 @@
+import uuid
 from pydantic import BaseModel
 
 class UserSchema(BaseModel):
@@ -6,4 +7,4 @@ class UserSchema(BaseModel):
     password: str
 
 class UserDB(UserSchema):
-    id: int
+    id: uuid.UUID

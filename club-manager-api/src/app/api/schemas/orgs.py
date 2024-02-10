@@ -1,3 +1,5 @@
+import uuid
+
 from pydantic import BaseModel
 
 class OrgSchema(BaseModel):
@@ -9,4 +11,4 @@ class OrgSchema(BaseModel):
     zip: str
 
 class OrgDB(OrgSchema):
-    id: int
+    id: uuid.UUID
