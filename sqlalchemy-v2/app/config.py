@@ -1,15 +1,19 @@
+import os
 import logging
 
-from pydantic import BaseSettings
+from pydantic_settings import BaseSettings
+
+
 
 logging.basicConfig(level=logging.INFO)
 
 class Settings(BaseSettings):
     """ App Settings"""
-    project_name: str = "SQLAlchemy v2 with FastAPI"
+    project_name: str = "The apothecary API"
     debug: bool = False
     environment: str = "development"
-    database_url: str = ""
+    basedir: str = os.path.abspath(os.path.dirname(__file__))
+    database_url: str = "sqlite+aiosqlite:///" + os.path.join(basedir, "apothecary.db")
 
 settings = Settings()
 
