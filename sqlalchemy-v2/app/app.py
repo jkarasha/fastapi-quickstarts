@@ -2,10 +2,17 @@ from fastapi import FastAPI
 
 from app.api.v1.routes import router as v1_router
 from app.api.v2.routes import router as v2_router
+
+#from sqlalchemy import MetaData
+
 from app.config import settings
+#from app.database.session import engine
+
+#metadata = MetaData()
+#metadata.create_all(engine)
 
 app = FastAPI(
-    title="The apothecary API",
+    title=settings.project_name,
     docs_url="/api/docs",
     openapi_url="/api/openapi.json",
 )
