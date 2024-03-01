@@ -4,7 +4,6 @@ import logging
 from pydantic_settings import BaseSettings
 
 
-
 logging.basicConfig(level=logging.INFO)
 
 class Settings(BaseSettings):
