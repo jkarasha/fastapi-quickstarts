@@ -1,13 +1,13 @@
 import uuid
 
-from sqlalchemy import Column, ForeignKey, Table, orm
-from sqlalchemy.dialects.postgresql import UUID
+from sqlalchemy import Column, ForeignKey, Table, orm, Integer
+from sqlalchemy.dialects.sqlite import INTEGER
 
 class Base(orm.DeclarativeBase):
     """ Base declarative class for all models """
     pk: orm.Mapped[uuid.UUID] = orm.mapped_column(
         primary_key=True,
-        default=uuid.uuid4,
+        default=int,
     )
 
 class Ingredient(Base):
@@ -18,8 +18,8 @@ class Ingredient(Base):
 potion_ingredient_association = Table(
     "potion_ingredient",
     Base.metadata,
-    Column("potion_id", UUID(as_uuid=True), ForeignKey("potion.pk")),
-    Column("ingredient_id", UUID(as_uuid=True), ForeignKey("ingredient.pk")),
+    Column("potion_id", Integer, ForeignKey("potion.pk")),
+    Column("ingredient_id", Integer, ForeignKey("ingredient.pk")),
 )
 
 class Potion(Base):
