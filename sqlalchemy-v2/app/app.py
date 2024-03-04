@@ -3,13 +3,9 @@ from fastapi import FastAPI
 from app.api.v1.routes import router as v1_router
 from app.api.v2.routes import router as v2_router
 
-#from sqlalchemy import MetaData
+from sqlalchemy import MetaData
 
 from app.config import settings
-#from app.database.session import engine
-
-#metadata = MetaData()
-#metadata.create_all(engine)
 
 app = FastAPI(
     title=settings.project_name,
