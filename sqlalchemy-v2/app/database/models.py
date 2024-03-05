@@ -1,11 +1,8 @@
-import uuid
 
 from sqlalchemy import Column, ForeignKey, Table, orm, Integer
-from sqlalchemy.dialects.sqlite import INTEGER
-
 class Base(orm.DeclarativeBase):
     """ Base declarative class for all models """
-    pk: orm.Mapped[uuid.UUID] = orm.mapped_column(
+    pk: orm.Mapped[int] = orm.mapped_column(
         primary_key=True,
         default=int,
     )

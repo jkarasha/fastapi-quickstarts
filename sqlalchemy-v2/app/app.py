@@ -3,8 +3,6 @@ from fastapi import FastAPI
 from app.api.v1.routes import router as v1_router
 from app.api.v2.routes import router as v2_router
 
-from sqlalchemy import MetaData
-
 from app.config import settings
 
 app = FastAPI(
