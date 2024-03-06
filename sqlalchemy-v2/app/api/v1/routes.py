@@ -15,6 +15,8 @@ async def create_ingredient(
     data: models.IngredientPayload,
     session: AsyncSession = Depends(get_db_session)
 ) -> models.Ingredient:
+    #
+    print(**data.model_dump())
     ingredient = db_models.Ingredient(**data.model_dump())
     session.add(ingredient)
     await session.commit()
