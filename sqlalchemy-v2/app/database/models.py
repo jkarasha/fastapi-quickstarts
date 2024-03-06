@@ -5,6 +5,7 @@ class Base(orm.DeclarativeBase):
     pk: orm.Mapped[int] = orm.mapped_column(
         primary_key=True,
         default=int,
+        autoincrement=True,
     )
 
 class Ingredient(Base):
