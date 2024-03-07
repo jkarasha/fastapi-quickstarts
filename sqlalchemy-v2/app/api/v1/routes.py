@@ -1,5 +1,3 @@
-import uuid
-
 from fastapi import APIRouter, Depends, HTTPException, status
 from sqlalchemy import select
 from sqlalchemy.ext.asyncio import AsyncSession
@@ -16,8 +14,7 @@ async def create_ingredient(
     session: AsyncSession = Depends(get_db_session)
 ) -> models.Ingredient:
     #
-    print(**data.model_dump())
-    ingredient = db_models.Ingredient(**data.model_dump())
+    ingredient = db_models.Ingredient(name=data.name)
     session.add(ingredient)
     await session.commit()
     await session.refresh(ingredient)
@@ -32,7 +29,7 @@ async def get_ingredients(
 
 @router.get("/ingredients/{ingredient_id}", status_code=status.HTTP_200_OK)
 async def get_ingredient(
-    pk: uuid.UUID,
+    pk: int,
     session: AsyncSession = Depends(get_db_session)
 ) -> models.Ingredient:
     ingredient = await session.get(db_models.Ingredient, pk)
@@ -68,7 +65,7 @@ async def get_potions(
 
 @router.get("/potions/{potion_id}", status_code=status.HTTP_200_OK)
 async def get_potion(
-    pk: uuid.UUID,
+    pk: int,
     session: AsyncSession = Depends(get_db_session)
 ) -> models.Potion:
     potion = await session.get(db_models.Potion, pk)

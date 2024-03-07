@@ -6,11 +6,9 @@ class Ingredient(BaseModel):
 
     pk: int
     name: str
-
 class IngredientPayload(BaseModel):
 
     name: str = Field(min_length=1, max_length=128)
-
 
 class Potion(BaseModel):
     
