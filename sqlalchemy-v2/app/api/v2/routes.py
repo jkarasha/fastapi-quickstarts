@@ -1,4 +1,3 @@
-import uuid
 from typing import Annotated
 from fastapi import APIRouter, Depends, HTTPException, status
 
@@ -37,7 +36,7 @@ async def get_ingredients(
 
 @router.get("/ingredients/{pk}", status_code=status.HTTP_200_OK)
 async def get_ingredient(
-    pk: uuid.UUID,
+    pk: int,
     repository: IngredientRepository
 ) -> models.Ingredient:
     ingredient = await repository.get(pk)
@@ -70,7 +69,7 @@ async def get_potions(
 
 @router.get("/potions/{pk}", status_code=status.HTTP_200_OK)
 async def get_potion(
-    pk: uuid.UUID,
+    pk: int,
     repository: PotionRepository
 ) -> models.Potion:
     potion = await repository.get(pk)

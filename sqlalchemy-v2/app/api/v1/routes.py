@@ -14,7 +14,8 @@ async def create_ingredient(
     session: AsyncSession = Depends(get_db_session)
 ) -> models.Ingredient:
     #
-    ingredient = db_models.Ingredient(name=data.name)
+    ingredient = db_models.Ingredient(**data.model_dump())
+    #print(f"Values: {data.model_dump()}")
     session.add(ingredient)
     await session.commit()
     await session.refresh(ingredient)
@@ -27,7 +28,7 @@ async def get_ingredients(
     ingredients = await session.scalars(select(db_models.Ingredient))
     return [models.Ingredient.model_validate(ingredient) for ingredient in ingredients]
 
-@router.get("/ingredients/{ingredient_id}", status_code=status.HTTP_200_OK)
+@router.get("/ingredients/{pk}", status_code=status.HTTP_200_OK)
 async def get_ingredient(
     pk: int,
     session: AsyncSession = Depends(get_db_session)
@@ -38,6 +39,7 @@ async def get_ingredient(
             status_code=status.HTTP_404_NOT_FOUND,
             detail="Ingredient does not exist"
         )
+    return models.Ingredient.model_validate(ingredient)
 
 @router.post("/potions", status_code=status.HTTP_201_CREATED)
 async def create_potion(
@@ -63,7 +65,7 @@ async def get_potions(
     potions = await session.scalars(select(db_models.Potion))
     return [models.Potion.model_validate(potion) for potion in potions]
 
-@router.get("/potions/{potion_id}", status_code=status.HTTP_200_OK)
+@router.get("/potions/{pk}", status_code=status.HTTP_200_OK)
 async def get_potion(
     pk: int,
     session: AsyncSession = Depends(get_db_session)
