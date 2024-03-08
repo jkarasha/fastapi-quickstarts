@@ -1,4 +1,3 @@
-import uuid
 from typing import Generic, TypeVar
 
 from sqlalchemy import BinaryExpression, select
@@ -22,11 +21,17 @@ class DatabaseRepository(Generic[Model]):
         await self.session.refresh(instance)
         return instance
 
-    async def get(self, pk: uuid.UUID) -> Model | None:
+    async def get(self, pk: int) -> Model | None:
         return await self.session.get(self.model, pk)
 
-    async def filter(self, *expression: BinaryExpression) -> list[Model]:
+    async def filter(self, *expressions: BinaryExpression) -> list[Model]:
+        #
+        print(f"expressions: {expressions}, model: {self.model}")
+        #
         query = select(self.model)
-        if expression:
-            query = query.where(*expression)
-        return list(await self.session.execute(query))
+        if expressions:
+            query = query.where(*expressions)
+        #
+        print(f"query: {query}")
+        #
+        return list(await self.session.scalars(query))
