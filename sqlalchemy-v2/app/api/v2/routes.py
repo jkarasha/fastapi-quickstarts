@@ -16,7 +16,6 @@ IngredientRepository = Annotated[
 PotionRepository = Annotated[
     DatabaseRepository[db_models.Potion],
     Depends(get_repository(db_models.Potion)),
-
 ]
 
 @router.post("/ingredients", status_code=status.HTTP_201_CREATED)
