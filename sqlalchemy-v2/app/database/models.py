@@ -1,4 +1,4 @@
-
+from datetime import datetime
 from sqlalchemy import Column, ForeignKey, Table, orm, Integer
 class Base(orm.DeclarativeBase):
     """ Base declarative class for all models """
@@ -6,6 +6,8 @@ class Base(orm.DeclarativeBase):
         primary_key=True,
         index=True,
     )
+    date_updated: orm.Mapped[datetime] = orm.mapped_column(default=datetime.now)
+    date_created: orm.Mapped[datetime] = orm.mapped_column(default=datetime.now)
 
 class Ingredient(Base):
     """ Ingredient model """
