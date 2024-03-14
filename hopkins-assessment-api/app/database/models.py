@@ -2,6 +2,10 @@ from datetime import datetime
 from sqlalchemy import Column, ForeignKey, Table, orm, Integer
 
 """
+TODO: Add Alemic to manage migrations
+"""
+
+"""
 Assessor (pk, email, role, name) -> 101, tricia@maddiesplace.org, Superuser, Tricia Hughes
 Role (pk, role_label, role_name) -> {101, SUPERUSER, Superuser}, {101, NURSE, Nurse}
 Child (pk, name, birth_date, admission_date, discharge_date)
