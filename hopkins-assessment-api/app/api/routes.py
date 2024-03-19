@@ -38,3 +38,34 @@ async def get_assessor(
             detail="Assessor does not exist"
         )
     return schemas.Assessor.model_validate(assessor)
+
+@router.post("/role", status_code=status.HTTP_201_CREATED)
+async def create_role(
+    data: schemas.RolePayload,
+    session: AsyncSession = Depends(get_db_session)
+) -> schemas.Role:
+    role = db_models.Role(**data.model_dump())
+    session.add(role)
+    await session.commit()
+    await session.refresh(role)
+    return schemas.Role.model_validate(role)
+
+@router.get("/role", status_code=status.HTTP_200_OK)
+async def get_roles(
+    session: AsyncSession = Depends(get_db_session)
+) -> list[schemas.Role]:
+    roles = await session.scalars(select(db_models.Role))
+    return [schemas.Role.model_validate(role) for role in roles]
+
+@router.get("/role/{pk}", status_code=status.HTTP_200_OK)
+async def get_role(
+    pk: int,
+    session: AsyncSession = Depends(get_db_session)
+) -> schemas.Role:
+    role = await session.get(db_models.Role, pk)
+    if role is None:
+        raise HTTPException(
+            status_code=status.HTTP_404_NOT_FOUND,
+            detail="Role does not exist"
+        )
+    return schemas.Role.model_validate(role)
