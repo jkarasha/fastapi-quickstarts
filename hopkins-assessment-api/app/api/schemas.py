@@ -47,3 +47,14 @@ class ChildPayload(BaseModel):
     birth_date: datetime
     admission_date: datetime
     discharge_date: datetime
+
+class Domain(BaseModel):
+    """ Domain model """
+    model_config = ConfigDict(from_attributes=True)
+    pk: int
+    domain_label: str
+    domain_name: str
+
+class DomainPayload(BaseModel):
+    domain_label: str
+    domain_name: str
