@@ -33,3 +33,9 @@ class DatabaseRepository(Generic[Model]):
 
         return list(await self.session.scalars(query))
 
+    async def delete(self, pk: int) -> None :
+        instance = await self.get(pk)
+        self.session.delete(instance)
+        await self.session.commit()
+        await self.session.refresh()
+

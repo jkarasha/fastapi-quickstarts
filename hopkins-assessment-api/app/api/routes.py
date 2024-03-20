@@ -39,6 +39,12 @@ async def get_assessor(
         )
     return schemas.Assessor.model_validate(assessor)
 
+#delete assessor
+@router.delete("/assessor/{pk}", status_code=status.HTTP_204_NO_CONTENT)
+async def delete_assessor(pk: int, session: AsyncSession = Depends(get_db_session)):
+    await session.delete(db_models.Assessor, pk)
+    
+
 @router.post("/role", status_code=status.HTTP_201_CREATED)
 async def create_role(
     data: schemas.RolePayload,
